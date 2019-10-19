@@ -1,0 +1,45 @@
+desc T_MAHASISWA
+
+select distinct a.nim, b.nama, a.kd_mkuliah, c.nama_mk
+from t_krs2 a, t_mahasiswa b, t_mkuliah c
+where b.nim = a.nim and c.kd_mkuliah = a.kd_mkuliah
+
+===================================================================================
+
+//1). Tampilkan krs dari 'nama mahasiswa'
+
+select distinct a.nim, b.nama, a.kode_mkuliah, c.nama_mk
+from t_krs2 a, t_mahasiswa b, t_matakuliah c
+where b.nim = a.nim and c.kd_mkuliah = a.kd_mkuliah and b.nama= 'Rizki Faro Khatiningsih'
+
+===================================================================================
+
+//2). Tampilkan dosen pengampu dari mata kuliah 'Kalkulus 2'
+
+select distinct a.nidn, b.dosen, a.kd_mkuliah, c.nama_mk
+from t_pengampu a, t_dosen b, t_matakuliah c
+where b.nidn = a.nidn and c.kd_mkuliah = a.kd_mkuliah and c.nama_mk='Kalkulus 2'
+
+===================================================================================
+
+//3). Tampilkan nama mahasiswa yang dosen walinya berdasarkan 'nama dosen'
+
+select distinct a.nama, b.nidn, c.dosen 
+from t_mahasiswa a, t_wali b, t_dosen c
+where a.nim = b.nim and b.nidn = c.nidn and c.dosen = 'Marzuki Silalahi'
+
+===================================================================================
+
+//4). Tampilkan dosen yg memiliki mahasiswa TERBANYAK didalam kelas
+
+select distinct b.dosen, count(a.nidn) as MAX_SUM
+from t_wali a, t_dosen b
+where a.nidn = b.nidn group by a.nidn, b.dosen order by MAX_SUM desc;
+
+===================================================================================
+
+//5). Tampilkan mata kuliah favorite mahasiswa
+
+select distinct b.nama_mk, count(a.kd_mkuliah) as FAVORITE
+from t_krs2 a, t_matakuliah b
+where a.kd_mkuliah = b.kd_mkuliah group by a.kd_mkuliah, b.nama_mk order by FAVORITE desc;
