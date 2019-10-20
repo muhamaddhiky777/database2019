@@ -1,0 +1,147 @@
+﻿--insert data mahasiswa
+insert into MAHASISWA (NIM, NAMA) VALUES ('20180801316','pratama wied artha'')
+insert into MAHASISWA (NIM, NAMA) VALUES ('20180801314','hidayat andika rahmat')
+insert into MAHASISWA (NIM, NAMA) VALUES ('20180801315','Iskandar')
+insert into MAHASISWA (NIM, NAMA) VALUES ('20180801317','lita')
+insert into MAHASISWA (NIM, NAMA) VALUES ('20180801359','sukma')
+--melihat semua data mahasiswa
+select * from MAHASISWA
+--melihat semua data mahasiswa dengan pengurutan nim dari terkecil ke terbesar
+select * from MAHASISWA order by NIM asc
+--delete mahasiswa
+delete from MAHASISWA where NIM='20180801322'
+--update mahasiswa
+update MAHASISWA set NIM='20180801322', NAMA='Refno Indra Kusuma wap' where NIM='20180801322'
+
+--insert data dosen
+insert into DOSEN (NID, NAMA) VALUES ('7135','bahrul ulum')
+insert into DOSEN (NID, NAMA) VALUES ('7136','marzuki silalahi')
+insert into DOSEN (NID, NAMA) VALUES ('7137','masmur tarigan')
+insert into DOSEN (NID, NAMA) VALUES ('7138','kundang karsono')
+insert into DOSEN (NID, NAMA) VALUES ('7139','binastya anggara')
+--melihat semua data dosen
+select * from DOSEN
+--melihat semua data dosen dengan pengurutan nidn dari terkecil ke terbesar
+select * from DOSEN order by NID asc
+--delete dosen
+delete from DOSEN where NID='7135'
+--update dosen
+update DOSEN set NID='7135', NAMA='bapak bahrul' where NID='7135'
+
+--insert data wali
+insert into WALI (NID, NIM) VALUES ('7135','20180801316')
+insert into WALI (NID, NIM) VALUES ('7135','20180801315')
+insert into WALI (NID, NIM) VALUES ('7136','20180801317')
+insert into WALI (NID, NIM) VALUES ('7136','20180801314')
+insert into WALI (NID, NIM) VALUES ('7137','20180801359')
+--melihat semua data wali
+select * from WALI
+--melihat semua data wali dengan pengurutan id dari terkecil ke terbesar
+select * from WALI order by ID asc
+--delete wali
+delete from WALI where ID=1
+--update wali
+update WALI set NID='7137', NIM='20180801317' where ID=1
+-- membuat trigger untuk auto increment wali
+CREATE OR REPLACE TRIGGER WALI_TRG
+ BEFORE INSERT ON WALI
+ FOR EACH ROW
+BEGIN
+ SELECT WALI_SEQ.nextval
+ INTO :new.ID
+ FROM dual;
+END;
+
+--insert data matakuliah
+insert into MATAKULIAH (KDMK, NAMA, SKS) VALUES ('CCB210','Basis Data', 4)
+insert into MATAKULIAH (KDMK, NAMA, SKS) VALUES ('CCR210','Rekayasa Perangkat Lunak', 3)
+insert into MATAKULIAH (KDMK, NAMA, SKS) VALUES ('CCP210','Pemrograman Berorientasi Objek', 4)
+insert into MATAKULIAH (KDMK, NAMA, SKS) VALUES ('ESA104','Pendidikan Pancasila', 2)
+insert into MATAKULIAH (KDMK, NAMA, SKS) VALUES ('ESA141','Motivasi Usaha', 1)
+--melihat semua data matakuliah
+select * from MATAKULIAH
+--melihat semua data matakuliah dengan pengurutan sks dari terkecil ke terbesar
+select * from MATAKULIAH order by SKS asc
+--delete matakuliah
+delete from MATAKULIAH where KDMK='ESA141'
+--update matakuliah
+update MATAKULIAH set KDMK='ESA142', NAMA='Motivasi Belajar', SKS=2 where KDMK='ESA141'
+
+--insert data pengampu
+insert into PENGAMPU (NID, KDMK) VALUES ('7135','CCB210')
+insert into PENGAMPU (NID, KDMK) VALUES ('7135','CCR210')
+insert into PENGAMPU (NID, KDMK) VALUES ('7136','CCP210')
+insert into PENGAMPU (NID, KDMK) VALUES ('7136','ESA104')
+insert into PENGAMPU (NID, KDMK) VALUES ('7137','ESA141')
+--melihat semua data pengampu
+select * from PENGAMPU
+--melihat semua data pengampu dengan pengurutan id dari terkecil ke terbesar
+select * from PENGAMPU order by ID asc
+--delete pengampu
+delete from PENGAMPU where ID=1
+--update pengampu
+update PENGAMPU set NID='7135', KDMK='CCB210' where ID=1
+-- membuat trigger untuk auto increment pengampu
+CREATE OR REPLACE TRIGGER PENGAMPU_TRG
+ BEFORE INSERT ON PENGAMPU
+ FOR EACH ROW
+BEGIN
+ SELECT PENGAMPU_SEQ.nextval
+ INTO :new.ID
+ FROM dual;
+END;
+
+--insert data krs
+insert into KRS (NIM, KDMK) VALUES ('20180801316','CCB210')
+insert into KRS (NIM, KDMK) VALUES ('20180801316','CCR210')
+insert into KRS (NIM, KDMK) VALUES ('20180801314','CCP210')
+insert into KRS (NIM, KDMK) VALUES ('20180801315','ESA104')
+insert into KRS (NIM, KDMK) VALUES ('20180801317','ESA141')
+--melihat semua data krs
+select * from KRS
+--melihat semua data krs dengan pengurutan id dari terkecil ke terbesar
+select * from KRS order by ID asc
+--delete krs
+delete from KRS where ID=1
+--update krs
+update KRS set NID='20180801359', KDMK='CCB210' where ID=1
+-- membuat trigger untuk auto increment krs
+CREATE OR REPLACE TRIGGER KRS_TRG
+ BEFORE INSERT ON KRS
+ FOR EACH ROW
+BEGIN
+ SELECT KRS_SEQ.nextval
+ INTO :new.ID
+ FROM dual;
+END;
+
+-- 1. menampilkan krs dengan nama mahasiswa
+select distinct K.NIM, M.NAMA, K.KDMK, MK.NAMA
+from KRS K, MAHASISWA M, MATAKULIAH MK
+where M.NIM=K.NIM 
+and MK.KDMK=K.KDMK
+and M.NAMA='Refno Indra Kusuma'
+-- 2. menampilkan dosen pengampu matakuliah basis data
+select distinct P.NID, D.NAMA, P.KDMK, MK.NAMA
+from PENGAMPU P, DOSEN D, MATAKULIAH MK
+where D.NID=P.NID
+and MK.KDMK=P.KDMK
+and MK.NAMA='Basis Data'
+-- 3. menampilkan mahasiswa yang dosen walinya masmur tarigan
+select distinct W.NIM, D.NAMA, W.NIM, M.NAMA
+from WALI W, DOSEN D, MAHASISWA M
+where D.NID=W.NID
+and M.NIM=W.NIM
+and D.NAMA='masmur tarigan'
+-- 4. dosen yang memiliki mahasiswa terbanyak
+select distinct D.NAMA, count(W.NIDN) as JUMLAH
+from WALI W, DOSEN D
+where W.NID=D.NID
+group by W.NIDN, D.NAMA
+order by JUMLAH desc;
+-- 5. matakuliah favorit mahasiswa
+select distinct MK.NAMA, count(K.KDMK) as JUMLAH
+from KRS K, MATAKULIAH MK
+where K.KDMK=MK.KDMK
+group by K.KDMK, MK.NAMA
+order by JUMLAH desc;
